@@ -1,4 +1,4 @@
-name: Tokens sync
+name: Generate SVG sprites
 
 on: [push]
 
@@ -26,6 +26,6 @@ jobs:
 
       - name: Push details
         run: |
-          git add out
+          git add out -f
           git commit -m "chore: add generated sprite"
           git push origin master
