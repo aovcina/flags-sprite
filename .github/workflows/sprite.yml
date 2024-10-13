@@ -1,0 +1,31 @@
+name: Tokens sync
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://npm.pkg.github.com/
+
+      - run: |
+          npx svgo -f ./assets --recursive --multipass
+  
+          npx svg-sprite --symbol --symbol-dest out/ --ss rounded.svg ./assets/rounded/*.svg
+          npx svg-sprite --symbol --symbol-dest out/ --ss flat.svg ./assets/flat/*.svg
+
+      - name: Set git globals
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Push details
+        run: |
+          git add out
+          git commit -m "chore: add generated sprite"
+          git push origin master
